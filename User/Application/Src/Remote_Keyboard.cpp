@@ -126,14 +126,20 @@ void KeyboardChassisCtrl()
 void KeyboardGimbalCtrl()
 {
     if (Referee.KeyState[REFEREE_KEY_Q].isTicked == 1) {
-        if (Chassis.Target_Encoder == 7340) {
-            Chassis.Target_Encoder = 3244;
-            Gimbal.SetYawPosition(-180.0f);
-        } else if (Chassis.Target_Encoder == 3244) {
-            Chassis.Target_Encoder = 7340;
-            Gimbal.SetYawPosition(-180.0f);
-        }
+        Gimbal.SetYawPosition(-180.0f);
         Referee.KeyState[REFEREE_KEY_Q].isTicked = 0;
+    }
+
+    if (Referee.KeyState[REFEREE_KEY_Z].isTicked == 1) {
+        Gimbal.SetMirrorPos(270 * 36.0f);
+    } else {
+        Gimbal.SetMirrorPos(0.0f);
+    }
+
+    if (Referee.KeyState[REFEREE_KEY_X].isTicked == 1) {
+        __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 520);
+    } else {
+        __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 420);
     }
     Gimbal.SetPitchPosition(-Referee.CommaData.mouse_y * 0.001f);
     Gimbal.SetYawPosition(Referee.CommaData.mouse_x * 0.001f);
@@ -174,10 +180,10 @@ void KeyboardShootCtrl()
                     Shoot.SetFricSpeed(5000.0f);
                 } else {
                     Chassis.shoot_flag = 0;
-                    Shoot.SetFricSpeed(4900.0f);  // 4900 白弹 4750 荧光
+                    Shoot.SetFricSpeed(4750.0f);  // 4900 白弹 4750 荧光
                 }
             } else {
-                Shoot.SetFricSpeed(4750.0f);  // 4750 norm 4850 high
+                Shoot.SetFricSpeed(4650.0f);  // 4750 norm 4850 high
             }
 
             if (Referee.KeyState[REFEREE_MOUSE_L].isPressed == 0) {

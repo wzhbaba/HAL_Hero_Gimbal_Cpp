@@ -45,6 +45,7 @@ extern Dji_Motor Gimbal_Motor[2];
 extern Dji_Motor Trigger_Motor;
 extern Dji_Motor Friction_Motor[2];
 extern Dji_Motor Preset_Motor;
+extern Dji_Motor Mirror_Motor;
 
 /* Exported function prototypes ----------------------------------------------*/
 #endif

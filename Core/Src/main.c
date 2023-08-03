@@ -106,7 +106,7 @@ int main(void)
     /* USER CODE BEGIN 2 */
     UserSystemCommInit();
     HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-    __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 520);
+    __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 420);
     /* USER CODE END 2 */
 
     /* Call init function for freertos objects (in freertos.c) */

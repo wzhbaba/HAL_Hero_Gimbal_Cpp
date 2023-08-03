@@ -28,9 +28,8 @@
 class Gimbal_t
 {
    public:
-    PID_Def Position[2];
-    PID_Def Speed[2];
-    PID_Def Current[2];
+    PID_Def Position[3];
+    PID_Def Speed[3];
 
     void Stop();
     void Control();
@@ -40,6 +39,7 @@ class Gimbal_t
     void SetVisionYawPos(float set);
     void SetPitchPosition(float set);
     void SetYawPosition(float set);
+    void SetMirrorPos(float set);
 };
 /* Exported variables --------------------------------------------------------*/
 extern Gimbal_t Gimbal;

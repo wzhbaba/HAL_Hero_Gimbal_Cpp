@@ -25,8 +25,8 @@ Chassis_t Chassis;
 
 void Chassis_t::FollowCtrl()
 {
-    Pack.x_speed = -arm_sin_f32(Gimbal_Motor[1].angle_real / 180 * PI) * Pack.y_target + arm_cos_f32(Gimbal_Motor[1].angle_real / 180 * PI) * Pack.x_target;
-    Pack.y_speed = arm_cos_f32(Gimbal_Motor[1].angle_real / 180 * PI) * Pack.y_target + arm_sin_f32(Gimbal_Motor[1].angle_real / 180 * PI) * Pack.x_target;
+    Pack.x_speed = -arm_sin_f32(Gimbal_Motor[1].angle_real / 360 * PI) * Pack.y_target + arm_cos_f32(Gimbal_Motor[1].angle_real / 360 * PI) * Pack.x_target;
+    Pack.y_speed = arm_cos_f32(Gimbal_Motor[1].angle_real / 360 * PI) * Pack.y_target + arm_sin_f32(Gimbal_Motor[1].angle_real / 360 * PI) * Pack.x_target;
 
     if (rotate_flag == 1) {
         Pack.r_speed = Pack.r_target;

@@ -43,7 +43,7 @@ void GimbalInit()
 
     Shoot.Trigger_Position.Set(5.0f, 0.0f, 0.0f, 5000.0f, 2500.0f, 0.0f, 15000.0f);
     Shoot.Trigger_Speed.Set(10.0f, 0.0f, 0.0f, 10000.0f, 5000.0f, 0.0f, 30000.0f);
-    Shoot.Trigger_Current.Set(2.0f, 0.0f, 0.0f, 10000.0f, 0.0f, 0.0f, 30000.0f);
+    Shoot.Trigger_Current.Set(1.0f, 0.0f, 0.0f, 30000.0f, 0.0f, 0.0f, 30000.0f);
 
     Shoot.Preset_Speed.Set(10.0f, 0.0f, 0.0f, 10000.0f, 0.0f, 0.0f, 10000.0f);
     Shoot.Preset_Current.Set(1.0f, 0.0f, 0.0f, 10000.0f, 0.0f, 0.0f, 10000.0f);
@@ -91,7 +91,7 @@ void HeroGimbalTask()
         Hero_Gimbal.Stop();
     }
     Chassis.FlagCommu();
-    CANx_PackProcess_Data(&hcan1, 0x1FF, 0x08, (int16_t)Gimbal.Speed[1].output, (int16_t)Shoot.Trigger_Current.output, 0, 0);
+    CANx_PackProcess_Data(&hcan1, 0x1FF, 0x08, (int16_t)Gimbal.Speed[1].output, (int16_t)Shoot.Trigger_Current.output, (int16_t)Gimbal.Speed[2].output, 0);
     CANx_PackProcess_Data(&hcan2, 0x200, 0x08, (int16_t)Shoot.Friction_Speed[0].output, (int16_t)Shoot.Friction_Speed[1].output, (int16_t)Shoot.Preset_Speed.output, (int16_t)Gimbal.Speed[0].output);
     CANx_PackProcess_Data(&hcan1, 0x112, 0x08, (int16_t)Chassis.Pack.x_speed, (int16_t)Chassis.Pack.y_speed, (int16_t)Chassis.Pack.r_speed, Chassis.ui_flag);
     CANx_PackProcess_Data(&hcan1, 0x114, 0x08, IMU.Euler[0] * 100, 0, 0, 0);

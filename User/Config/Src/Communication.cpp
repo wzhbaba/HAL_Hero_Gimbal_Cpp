@@ -101,6 +101,8 @@ void UserCAN1DataUpdate(CANx_Message* CANx_RxMsg)
         Referee.BoardCommu(CANx_RxMsg->Data);
     } else if (CANx_RxMsg->ID == 0x206) {
         Trigger_Motor.Update(CANx_RxMsg->Data);
+    } else if (CANx_RxMsg->ID == 0x207) {
+        Mirror_Motor.Update(CANx_RxMsg->Data);
     }
 }
 
