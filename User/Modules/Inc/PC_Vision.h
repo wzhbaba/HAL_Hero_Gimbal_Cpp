@@ -23,14 +23,51 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
+#pragma pack(1)
+// 必须有__packed，这样就可以使得结构体内存连续，方便赋值给数组，同时节约空间
+typedef struct
+{
+    uint8_t header;
+    uint8_t detect_color : 1;  // 0-red 1-blue
+    bool reset_tracker : 1;
+    uint8_t reserved : 6;
+    float pitch;
+    float yaw;
+    float aim_x;
+    float aim_y;
+    float aim_z;
+    uint16_t checksum;
+} RobToVisPacket;
+
+typedef struct
+{
+    uint8_t header;
+    bool tracking : 1;
+    uint8_t id : 3;          // 0-outpost 6-guard 7-base
+    uint8_t armors_num : 3;  // 2-balance 3-outpost 4-normal
+    uint8_t reserved : 1;
+    float x;
+    float y;
+    float z;
+    float yaw;
+    float vx;
+    float vy;
+    float vz;
+    float v_yaw;
+    float r1;
+    float r2;
+    float dz;
+    uint16_t checksum;
+} VisToRobPacket;
+#pragma pack()
+
 class Vision_Def
 {
    public:
-    float Yaw_Angle;
-    float Pitch_Angle;
-    float Distance;
-
+    bool state;
+    float pitch, yaw, aim_x, aim_y, aim_z;
     void DataPack(uint8_t *pData);
+    void Send(float pitch, float yaw);
 
    private:
 };

@@ -15,6 +15,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include <PC_Vision.h>
 
+#include "CRC.h"
+#include "SolveTrajectory.h"
+#include "usbd_cdc_if.h"
 /* Private macro -------------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 /* Private types -------------------------------------------------------------*/
@@ -32,21 +35,41 @@ Vision_Def Vision;
  */
 void Vision_Def::DataPack(uint8_t *pData)
 {
-    static float Vision_Last[3];
+    static VisToRobPacket Rx_Data;
 
-    if (pData[0] == 'R' && pData[1] == 'M') {
-        if (pData[2] != 'A' && pData[3] != 'A') {
-            Yaw_Angle = (float)(int16_t)(pData[3] << 8 | pData[2]) / 100.0f;
-            Pitch_Angle = (float)(int16_t)(pData[5] << 8 | pData[4]) / 100.0f;
-            Distance = (float)(int16_t)(pData[6]) * 10.0f;
-
-            Vision_Last[0] = Yaw_Angle;
-            Vision_Last[1] = Pitch_Angle;
-            Vision_Last[2] = Distance;
-        } else {
-            Yaw_Angle = Vision_Last[0];
-            Pitch_Angle = Vision_Last[1];
-            Distance = Vision_Last[2];
+    if (pData != NULL) {
+        memcpy(&Rx_Data, pData, sizeof(VisToRobPacket));
+        if (Rx_Data.checksum == Get_CRC16_Check_Sum(pData, sizeof(VisToRobPacket) - 2, 0xffff)) {
+            st.armor_id = Rx_Data.id;
+            st.armor_num = Rx_Data.armors_num;
+            memcpy(&st.xw, &Rx_Data.x, sizeof(float) * 11);
+            if (Rx_Data.tracking == true) {
+                state = true;
+                autoSolveTrajectory(&pitch, &yaw, &aim_x, &aim_y, &aim_z);
+            } else {
+                state = false;
+            }
         }
     }
+}
+
+void Vision_Def::Send(float pitch, float yaw)
+{
+    static RobToVisPacket Tx_Data;
+
+    Tx_Data.header = 0x5A;
+    Tx_Data.detect_color = 1;
+    Tx_Data.reset_tracker = 0;
+    Tx_Data.reserved = 0;
+
+    Tx_Data.pitch = pitch / 180.0f * PI;
+    Tx_Data.yaw = yaw / 180.0f * PI;
+
+    Tx_Data.aim_x = aim_x;
+    Tx_Data.aim_y = aim_y;
+    Tx_Data.aim_z = aim_z;
+
+    Tx_Data.checksum = Get_CRC16_Check_Sum((uint8_t *)&Tx_Data, sizeof(RobToVisPacket) - 2, 0xFFFF);
+
+    CDC_Transmit_FS((uint8_t *)&Tx_Data, sizeof(RobToVisPacket));
 }

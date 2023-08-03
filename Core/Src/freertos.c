@@ -29,6 +29,7 @@
 #include "Communication.h"
 #include "Hero_Gimbal.h"
 #include "Remote_Keyboard.h"
+#include "SolveTrajectory.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -129,7 +130,7 @@ void MX_FREERTOS_Init(void)
     remoteTaskHandle = osThreadCreate(osThread(remoteTask), NULL);
 
     /* definition and creation of imuTask */
-    osThreadDef(imuTask, StartIMUTask, osPriorityAboveNormal, 0, 128);
+    osThreadDef(imuTask, StartIMUTask, osPriorityHigh, 0, 128);
     imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
 
     /* definition and creation of refereeTask */
@@ -245,6 +246,7 @@ void StartVisionRecTask(void const *argument)
     /* Infinite loop */
     for (;;) {
         VisionRecTask();
+        osDelay(5);
     }
     /* USER CODE END StartVisionRecTask */
 }
@@ -259,10 +261,11 @@ void StartVisionRecTask(void const *argument)
 void StartVisionSendTask(void const *argument)
 {
     /* USER CODE BEGIN StartVisionSendTask */
+    TrajectoryParams_Init();
     /* Infinite loop */
     for (;;) {
         VisionSendTask();
-        osDelay(10);
+        osDelay(5);
     }
     /* USER CODE END StartVisionSendTask */
 }

@@ -56,8 +56,8 @@ void RemoteChassisCtrl()
 void RemoteGimbalCtrl()
 {
     if (Remote.Pack.s1 == 1) {
-        Gimbal.SetVisionPitchPos(Vision.Pitch_Angle);
-        Gimbal.SetVisionYawPos(Vision.Yaw_Angle);
+        Gimbal.SetVisionPitchPos(Vision.pitch * 180.0f / 3.1415926f);
+        Gimbal.SetVisionYawPos(Vision.yaw * 180.0f / 3.1415926f);
     } else {
         Gimbal.SetPitchPosition((Remote.Pack.ch1 / 660.0f) * 0.25f);
         Gimbal.SetYawPosition((Remote.Pack.ch0 / 660.0f) * 0.25f);
