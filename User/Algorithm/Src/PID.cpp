@@ -39,7 +39,7 @@ void PID_Def::NormalCalc()
     VAL_LIMIT(component[1], -ki_max, ki_max);
     VAL_LIMIT(component[2], -kd_max, kd_max);
 
-    output = component[0] + component[1] + component[2];
+    output = (component[0] + component[1] + component[2]) * 0.95f + output * 0.05f;
 
     VAL_LIMIT(output, -output_max, output_max);
     err[1] = err[0];

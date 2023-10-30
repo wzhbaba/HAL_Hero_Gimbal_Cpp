@@ -122,8 +122,12 @@ void UserCAN2DataUpdate(CANx_Message* CANx_RxMsg)
     } else if (CANx_RxMsg->ID == 0x202) {
         Friction_Motor[1].Update(CANx_RxMsg->Data);
     } else if (CANx_RxMsg->ID == 0x203) {
-        Preset_Motor.Update(CANx_RxMsg->Data);
+        Friction_Motor[2].Update(CANx_RxMsg->Data);
     } else if (CANx_RxMsg->ID == 0x204) {
+        Friction_Motor[3].Update(CANx_RxMsg->Data);
+    } else if (CANx_RxMsg->ID == 0x205) {
+        Preset_Motor.Update(CANx_RxMsg->Data);
+    } else if (CANx_RxMsg->ID == 0x206) {
         Gimbal_Motor[0].Update(CANx_RxMsg->Data);
     }
 }

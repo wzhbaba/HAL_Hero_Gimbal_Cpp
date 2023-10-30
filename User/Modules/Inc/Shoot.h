@@ -23,6 +23,8 @@
 #include "PID.h"
 /* Exported macro ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
+#define FIRST_FRICTION_SPEED 2000
+#define SECOND_FRICTION_SPEED 4000
 /* Exported types ------------------------------------------------------------*/
 typedef enum {
     ANGLE_FLAG = 0,
@@ -32,7 +34,7 @@ typedef enum {
 class Shoot_t
 {
    public:
-    PID_Def Friction_Speed[2];
+    PID_Def Friction_Speed[4];
     PID_Def Friction_Current[2];
     PID_Def Trigger_Position;
     PID_Def Trigger_Speed;
@@ -41,10 +43,11 @@ class Shoot_t
     PID_Def Preset_Current;
     uint16_t Shoot_Flag;
     void FrictionControl();
-    void SetFricSpeed(float speed);
+    void SetFirstFricSpeed(float speed);
+    void SetSecondFricSpeed(float speed);
     void SetTriggerPos(float pos);
-    void SetTriggerSpeed(float speed);
     void SetPresetSpeed(float speed);
+    void SetFricSpeed(float first, float second);
     void TriggerControl();
     void PresetControl();
     void Control();

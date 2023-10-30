@@ -73,7 +73,7 @@ void RemoteGimbalCtrl()
 void RemoteShootCtrl()
 {
     static uint8_t flag = 0;
-    Shoot.SetFricSpeed(4500.0f);
+    Shoot.SetFricSpeed(4000.0f, 5400.0f);
 
     if (Remote.Pack.s1 == 3) {
         flag = 1;
@@ -85,7 +85,7 @@ void RemoteShootCtrl()
         flag = 0;
     }
 
-    if (Shoot.Trigger_Position.ref - Shoot.Trigger_Position.fdb < 700) {
+    if (Shoot.Trigger_Position.ref - Shoot.Trigger_Position.fdb < 500) {
         Shoot.SetPresetSpeed(0.0f);
     }
 }
@@ -131,9 +131,9 @@ void KeyboardGimbalCtrl()
     }
 
     if (Referee.KeyState[REFEREE_KEY_Z].isTicked == 1) {
-        Gimbal.SetMirrorPos(270 * 36.0f);
+        __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 1157);
     } else {
-        Gimbal.SetMirrorPos(0.0f);
+        __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 500);
     }
 
     if (Referee.KeyState[REFEREE_KEY_X].isTicked == 1) {
@@ -151,6 +151,8 @@ void KeyboardShootCtrl()
     static uint16_t time_out = 0;
     static uint8_t shoot_allow_flag = 0;
     static uint8_t count_flag = 1;
+    static uint8_t referee_flag;
+    static float fric_speed = 5400.0f;
 
     if (Referee.GameRobotStat.mains_power_shooter_output == 1) {
         if (count_flag) {
@@ -173,24 +175,36 @@ void KeyboardShootCtrl()
         if (Referee.KeyState[REFEREE_KEY_F].isTicked == 1) {
             Chassis.fric_flag = 1;
             if (Referee.GameRobotStat.shooter_id1_42mm_speed_limit == 10) {
-                Shoot.SetFricSpeed(3300.0f);
+                Shoot.SetFricSpeed(3000.0f, 4000.0f);
             } else if (Referee.GameRobotStat.shooter_id1_42mm_speed_limit == 16) {
-                if (Referee.KeyState[REFEREE_KEY_E].isTicked == 1 && IMU.Euler[0] <= -10.0f) {
-                    Chassis.shoot_flag = 1;
-                    Shoot.SetFricSpeed(5000.0f);
-                } else {
-                    Chassis.shoot_flag = 0;
-                    Shoot.SetFricSpeed(4750.0f);  // 4900 白弹 4750 荧光
+                if (Referee.KeyState[REFEREE_KEY_E].isTicked == 1) {
+                    fric_speed += 20.0f;
+                    Referee.KeyState[REFEREE_KEY_E].isTicked = 0;
+                } else if (Referee.KeyState[REFEREE_KEY_R].isTicked == 1) {
+                    fric_speed -= 20.0f;
+                    Referee.KeyState[REFEREE_KEY_R].isTicked = 0;
                 }
+                Chassis.Fric_Speed = fric_speed;
+                Shoot.SetFricSpeed(4000.0f, fric_speed);
             } else {
-                Shoot.SetFricSpeed(4650.0f);  // 4750 norm 4850 high
+                Shoot.SetFricSpeed(4000.0f, 5400.0f);  // 5500 15.6
             }
 
             if (Referee.KeyState[REFEREE_MOUSE_L].isPressed == 0) {
                 flag = 1;
             }
 
-            if (shoot_allow_flag == 1 && Referee.KeyState[REFEREE_MOUSE_L].isPressed == 1 && flag == 1 && (Referee.GameRobotStat.shooter_id1_42mm_cooling_limit - Referee.PowerHeatData.shooter_id1_42mm_cooling_heat) >= 100) {
+            if (Referee.KeyState[REFEREE_KEY_B].isPressed == 1) {
+                referee_flag = 1;
+            } else {
+                if ((Referee.GameRobotStat.shooter_id1_42mm_cooling_limit - Referee.PowerHeatData.shooter_id1_42mm_cooling_heat) >= 100) {
+                    referee_flag = 1;
+                } else {
+                    referee_flag = 0;
+                }
+            }
+
+            if (shoot_allow_flag == 1 && Referee.KeyState[REFEREE_MOUSE_L].isPressed == 1 && flag == 1 && referee_flag == 1) {
                 Shoot.SetTriggerPos(60 * 19.2f);
                 Shoot.SetPresetSpeed(500 * 36.0f);
                 flag = 0;
@@ -198,7 +212,7 @@ void KeyboardShootCtrl()
                 count_flag = 1;
             }
 
-            if (Shoot.Trigger_Position.ref - Shoot.Trigger_Position.fdb < 45 * 19.2f) {
+            if (Shoot.Trigger_Position.ref - Shoot.Trigger_Position.fdb < 30 * 19.2f) {
                 Shoot.SetPresetSpeed(0.0f);
             }
 
@@ -209,11 +223,11 @@ void KeyboardShootCtrl()
 
         } else {
             Chassis.fric_flag = 0;
-            Shoot.SetFricSpeed(0.0f);
+            Shoot.SetFricSpeed(0.0f, 0.0f);
         }
 
     } else {
         Chassis.fric_flag = 0;
-        Shoot.SetFricSpeed(0.0f);
+        Shoot.SetFricSpeed(0.0f, 0.0f);
     }
 }

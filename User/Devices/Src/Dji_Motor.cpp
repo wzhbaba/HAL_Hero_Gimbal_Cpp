@@ -21,7 +21,7 @@
 /* External variables --------------------------------------------------------*/
 Dji_Motor Gimbal_Motor[2];
 Dji_Motor Trigger_Motor;
-Dji_Motor Friction_Motor[2];
+Dji_Motor Friction_Motor[4];
 Dji_Motor Preset_Motor;
 Dji_Motor Mirror_Motor;
 /* Private function prototypes -----------------------------------------------*/

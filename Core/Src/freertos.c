@@ -19,10 +19,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
-
-#include "cmsis_os.h"
-#include "main.h"
 #include "task.h"
+#include "main.h"
+#include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -65,20 +64,20 @@ osThreadId modeTaskHandle;
 
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void const *argument);
-void StartRemoteTask(void const *argument);
-void StartIMUTask(void const *argument);
-void StartRefereeTask(void const *argument);
-void StartVisionRecTask(void const *argument);
-void StartVisionSendTask(void const *argument);
-void StartGimbalTask(void const *argument);
-void StartModeTask(void const *argument);
+void StartDefaultTask(void const * argument);
+void StartRemoteTask(void const * argument);
+void StartIMUTask(void const * argument);
+void StartRefereeTask(void const * argument);
+void StartVisionRecTask(void const * argument);
+void StartVisionSendTask(void const * argument);
+void StartGimbalTask(void const * argument);
+void StartModeTask(void const * argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* GetIdleTaskMemory prototype (linked to static allocation support) */
-void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize);
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
 
 /* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
 static StaticTask_t xIdleTaskTCBBuffer;
@@ -94,68 +93,68 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackTyp
 /* USER CODE END GET_IDLE_TASK_MEMORY */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
-void MX_FREERTOS_Init(void)
-{
-    /* USER CODE BEGIN Init */
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
+void MX_FREERTOS_Init(void) {
+  /* USER CODE BEGIN Init */
 
-    /* USER CODE END Init */
+  /* USER CODE END Init */
 
-    /* USER CODE BEGIN RTOS_MUTEX */
+  /* USER CODE BEGIN RTOS_MUTEX */
     /* add mutexes, ... */
-    /* USER CODE END RTOS_MUTEX */
+  /* USER CODE END RTOS_MUTEX */
 
-    /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
     /* add semaphores, ... */
-    /* USER CODE END RTOS_SEMAPHORES */
+  /* USER CODE END RTOS_SEMAPHORES */
 
-    /* USER CODE BEGIN RTOS_TIMERS */
+  /* USER CODE BEGIN RTOS_TIMERS */
     /* start timers, add new ones, ... */
-    /* USER CODE END RTOS_TIMERS */
+  /* USER CODE END RTOS_TIMERS */
 
-    /* USER CODE BEGIN RTOS_QUEUES */
+  /* USER CODE BEGIN RTOS_QUEUES */
     /* add queues, ... */
-    /* USER CODE END RTOS_QUEUES */
+  /* USER CODE END RTOS_QUEUES */
 
-    /* Create the thread(s) */
-    /* definition and creation of defaultTask */
-    osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-    defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* Create the thread(s) */
+  /* definition and creation of defaultTask */
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-    /* definition and creation of remoteTask */
-    osThreadDef(remoteTask, StartRemoteTask, osPriorityAboveNormal, 0, 128);
-    remoteTaskHandle = osThreadCreate(osThread(remoteTask), NULL);
+  /* definition and creation of remoteTask */
+  osThreadDef(remoteTask, StartRemoteTask, osPriorityAboveNormal, 0, 128);
+  remoteTaskHandle = osThreadCreate(osThread(remoteTask), NULL);
 
-    /* definition and creation of imuTask */
-    osThreadDef(imuTask, StartIMUTask, osPriorityHigh, 0, 128);
-    imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
+  /* definition and creation of imuTask */
+  osThreadDef(imuTask, StartIMUTask, osPriorityAboveNormal, 0, 128);
+  imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
 
-    /* definition and creation of refereeTask */
-    osThreadDef(refereeTask, StartRefereeTask, osPriorityRealtime, 0, 256);
-    refereeTaskHandle = osThreadCreate(osThread(refereeTask), NULL);
+  /* definition and creation of refereeTask */
+  osThreadDef(refereeTask, StartRefereeTask, osPriorityRealtime, 0, 256);
+  refereeTaskHandle = osThreadCreate(osThread(refereeTask), NULL);
 
-    /* definition and creation of visionRecTask */
-    osThreadDef(visionRecTask, StartVisionRecTask, osPriorityAboveNormal, 0, 256);
-    visionRecTaskHandle = osThreadCreate(osThread(visionRecTask), NULL);
+  /* definition and creation of visionRecTask */
+  osThreadDef(visionRecTask, StartVisionRecTask, osPriorityAboveNormal, 0, 256);
+  visionRecTaskHandle = osThreadCreate(osThread(visionRecTask), NULL);
 
-    /* definition and creation of visionSendTask */
-    osThreadDef(visionSendTask, StartVisionSendTask, osPriorityAboveNormal, 0, 256);
-    visionSendTaskHandle = osThreadCreate(osThread(visionSendTask), NULL);
+  /* definition and creation of visionSendTask */
+  osThreadDef(visionSendTask, StartVisionSendTask, osPriorityAboveNormal, 0, 256);
+  visionSendTaskHandle = osThreadCreate(osThread(visionSendTask), NULL);
 
-    /* definition and creation of gimbalTask */
-    osThreadDef(gimbalTask, StartGimbalTask, osPriorityAboveNormal, 0, 128);
-    gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
+  /* definition and creation of gimbalTask */
+  osThreadDef(gimbalTask, StartGimbalTask, osPriorityAboveNormal, 0, 128);
+  gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
 
-    /* definition and creation of modeTask */
-    osThreadDef(modeTask, StartModeTask, osPriorityAboveNormal, 0, 128);
-    modeTaskHandle = osThreadCreate(osThread(modeTask), NULL);
+  /* definition and creation of modeTask */
+  osThreadDef(modeTask, StartModeTask, osPriorityAboveNormal, 0, 128);
+  modeTaskHandle = osThreadCreate(osThread(modeTask), NULL);
 
-    /* USER CODE BEGIN RTOS_THREADS */
+  /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
-    /* USER CODE END RTOS_THREADS */
+  /* USER CODE END RTOS_THREADS */
+
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -165,11 +164,11 @@ void MX_FREERTOS_Init(void)
  * @retval None
  */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const *argument)
+void StartDefaultTask(void const * argument)
 {
-    /* init code for USB_DEVICE */
-    MX_USB_DEVICE_Init();
-    /* USER CODE BEGIN StartDefaultTask */
+  /* init code for USB_DEVICE */
+  MX_USB_DEVICE_Init();
+  /* USER CODE BEGIN StartDefaultTask */
     /* Infinite loop */
     for (;;) {
         HAL_GPIO_TogglePin(LED_R_GPIO_Port, LED_R_Pin);
@@ -179,7 +178,7 @@ void StartDefaultTask(void const *argument)
         HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
         osDelay(500);
     }
-    /* USER CODE END StartDefaultTask */
+  /* USER CODE END StartDefaultTask */
 }
 
 /* USER CODE BEGIN Header_StartRemoteTask */
@@ -189,14 +188,14 @@ void StartDefaultTask(void const *argument)
  * @retval None
  */
 /* USER CODE END Header_StartRemoteTask */
-void StartRemoteTask(void const *argument)
+void StartRemoteTask(void const * argument)
 {
-    /* USER CODE BEGIN StartRemoteTask */
+  /* USER CODE BEGIN StartRemoteTask */
     /* Infinite loop */
     for (;;) {
         RemoteTask();
     }
-    /* USER CODE END StartRemoteTask */
+  /* USER CODE END StartRemoteTask */
 }
 
 /* USER CODE BEGIN Header_StartIMUTask */
@@ -206,14 +205,14 @@ void StartRemoteTask(void const *argument)
  * @retval None
  */
 /* USER CODE END Header_StartIMUTask */
-void StartIMUTask(void const *argument)
+void StartIMUTask(void const * argument)
 {
-    /* USER CODE BEGIN StartIMUTask */
+  /* USER CODE BEGIN StartIMUTask */
     /* Infinite loop */
     for (;;) {
         IMUTask();
     }
-    /* USER CODE END StartIMUTask */
+  /* USER CODE END StartIMUTask */
 }
 
 /* USER CODE BEGIN Header_StartRefereeTask */
@@ -223,14 +222,14 @@ void StartIMUTask(void const *argument)
  * @retval None
  */
 /* USER CODE END Header_StartRefereeTask */
-void StartRefereeTask(void const *argument)
+void StartRefereeTask(void const * argument)
 {
-    /* USER CODE BEGIN StartRefereeTask */
+  /* USER CODE BEGIN StartRefereeTask */
     /* Infinite loop */
     for (;;) {
         RefereeTask();
     }
-    /* USER CODE END StartRefereeTask */
+  /* USER CODE END StartRefereeTask */
 }
 
 /* USER CODE BEGIN Header_StartVisionRecTask */
@@ -240,15 +239,15 @@ void StartRefereeTask(void const *argument)
  * @retval None
  */
 /* USER CODE END Header_StartVisionRecTask */
-void StartVisionRecTask(void const *argument)
+void StartVisionRecTask(void const * argument)
 {
-    /* USER CODE BEGIN StartVisionRecTask */
+  /* USER CODE BEGIN StartVisionRecTask */
     /* Infinite loop */
     for (;;) {
         VisionRecTask();
         osDelay(5);
     }
-    /* USER CODE END StartVisionRecTask */
+  /* USER CODE END StartVisionRecTask */
 }
 
 /* USER CODE BEGIN Header_StartVisionSendTask */
@@ -258,16 +257,16 @@ void StartVisionRecTask(void const *argument)
  * @retval None
  */
 /* USER CODE END Header_StartVisionSendTask */
-void StartVisionSendTask(void const *argument)
+void StartVisionSendTask(void const * argument)
 {
-    /* USER CODE BEGIN StartVisionSendTask */
+  /* USER CODE BEGIN StartVisionSendTask */
     TrajectoryParams_Init();
     /* Infinite loop */
     for (;;) {
         VisionSendTask();
         osDelay(5);
     }
-    /* USER CODE END StartVisionSendTask */
+  /* USER CODE END StartVisionSendTask */
 }
 
 /* USER CODE BEGIN Header_StartGimbalTask */
@@ -277,16 +276,16 @@ void StartVisionSendTask(void const *argument)
  * @retval None
  */
 /* USER CODE END Header_StartGimbalTask */
-void StartGimbalTask(void const *argument)
+void StartGimbalTask(void const * argument)
 {
-    /* USER CODE BEGIN StartGimbalTask */
+  /* USER CODE BEGIN StartGimbalTask */
     GimbalInit();
     /* Infinite loop */
     for (;;) {
         HeroGimbalTask();
         osDelay(5);
     }
-    /* USER CODE END StartGimbalTask */
+  /* USER CODE END StartGimbalTask */
 }
 
 /* USER CODE BEGIN Header_StartModeTask */
@@ -296,15 +295,15 @@ void StartGimbalTask(void const *argument)
  * @retval None
  */
 /* USER CODE END Header_StartModeTask */
-void StartModeTask(void const *argument)
+void StartModeTask(void const * argument)
 {
-    /* USER CODE BEGIN StartModeTask */
+  /* USER CODE BEGIN StartModeTask */
     /* Infinite loop */
     for (;;) {
         ModeTask();
         osDelay(1);
     }
-    /* USER CODE END StartModeTask */
+  /* USER CODE END StartModeTask */
 }
 
 /* Private application code --------------------------------------------------*/
